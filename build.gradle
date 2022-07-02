@@ -1,0 +1,86 @@
+buildscript {
+    repositories {
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+plugins {
+    id 'org.springframework.boot' version '2.3.7.RELEASE'
+    id 'io.spring.dependency-management' version '1.0.10.RELEASE'
+    id 'java'
+}
+
+group = 'org.chenzx'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+allprojects {
+    repositories {
+        //google()
+        //jcenter()
+        maven { url 'https://maven.aliyun.com/repository/public/' }
+        maven { url 'https://maven.aliyun.com/repository/google/' }
+        maven { url 'https://maven.aliyun.com/repository/jcenter/' }
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+configurations {
+    developmentOnly
+    runtimeClasspath {
+        extendsFrom developmentOnly
+    }
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 系统健康情况检查
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    // 使用Spring操作Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    // 安全认证框架
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    // 请求参数校验工具
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // web
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    // json格式化工具
+    implementation 'com.alibaba:fastjson:2.0.7'
+    // mybatis-plus
+    implementation 'com.baomidou:mybatis-plus-boot-starter:3.5.2'
+    // lang3 工具类
+    implementation 'org.apache.commons:commons-lang3:3.12.0'
+    // guava 集合工具类
+    implementation group: 'com.google.guava', name: 'guava', version: '31.1-jre'
+    // druid 连接池
+    implementation group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.2.11'
+    // jjwt
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
+            'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    runtimeOnly 'com.taobao.arthas:arthas-spring-boot-starter:3.6.3'
+    runtimeOnly 'mysql:mysql-connector-java'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation('org.springframework.boot:spring-boot-starter-test') {
+        exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+    }
+    testImplementation 'org.springframework.security:spring-security-test'
+}
+
+test {
+    useJUnitPlatform()
+}
