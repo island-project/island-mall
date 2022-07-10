@@ -5,11 +5,15 @@
         select r.name as roles, a.name as auths
         from sys_role as r
         left join sys_auth as a on a.id in (select auth_id from sys_role_auth where role_id = r.id)
-        where r.id in (select role_id from sys_user_role where user_id = #{username})
+        where r.id in (select role_id from sys_user_role where user_id = #{userId})
     </select>
 
     <resultMap id="queryUserAllInfoResultMap" type="org.chenzx.island.vo.SysUser">
-        <collection property="roles" column="roles"/>
-        <collection property="authorities" column="auths"/>
+        <collection property="roles" ofType="java.lang.String">
+            <result column="roles"/>
+        </collection>
+        <collection property="authorities" ofType="org.springframework.security.core.authority.SimpleGrantedAuthority">
+            <result column="auths"/>
+        </collection>
     </resultMap>
 </mapper>

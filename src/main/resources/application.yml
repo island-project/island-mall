@@ -12,6 +12,9 @@ mybatis-plus:
       logic-delete-field: del_flag
       logic-delete-value: 1
       logic-not-delete-value: 0
+  mapper-locations: classpath:/org/chenzx/island/mapper/*Mapper.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
 jwt:
   signature-key: 12341241251

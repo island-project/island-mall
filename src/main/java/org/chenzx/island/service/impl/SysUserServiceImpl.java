@@ -22,8 +22,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> implements ISysUserService {
 
-    private SysUserMapper sysUserMapper;
-    private SysUserConverter sysUserConverter;
+    private final SysUserMapper sysUserMapper;
+    private final SysUserConverter sysUserConverter;
 
     /**
      * 查询用户对象
@@ -39,6 +39,6 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> im
         if (sysUserDo == null) {
             return null;
         }
-        return sysUserConverter.doToSysUser(sysUserDo, sysUserMapper.queryUserAllInfo(username));
+        return sysUserConverter.doToSysUser(sysUserDo, sysUserMapper.queryUserAllInfo(sysUserDo.getId()));
     }
 }

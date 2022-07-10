@@ -17,9 +17,9 @@ public interface SysUserMapper extends BaseMapper<SysUserDo> {
     /**
      * 查询用户全部(权限、角色)附属信息
      *
-     * @param username 用户名
+     * @param userId 用户主键
      * @return 包含用户权限、角色信息的对象
      */
-    SysUser queryUserAllInfo(String username);
+    SysUser queryUserAllInfo(String userId);
 
 }

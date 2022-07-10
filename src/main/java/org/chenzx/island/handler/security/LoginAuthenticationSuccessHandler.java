@@ -38,7 +38,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SysUser sysUser = (SysUser) authentication.getPrincipal();
-        String accessToken = jwtUtils.getJwtToken(sysUser, accessTokenExpirationTime);
+        String accessToken = jwtUtils.getJwtToken(JSONObject.toJSONString(sysUser), accessTokenExpirationTime);
         String refreshToken = jwtUtils.getJwtToken(sysUser.getUsername(), refreshTokenExpirationTime);
         Result result = Result.isOk(Token.builder().accessToken(accessToken).refreshToken(refreshToken).build());
         response.setHeader("Content-type", "application/json;charset=UTF-8");

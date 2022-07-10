@@ -3,8 +3,8 @@ package org.chenzx.island.converter;
 import org.chenzx.island.vo.SysUser;
 import org.chenzx.island.vo.pojo.SysUserDo;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
-import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 /**
@@ -25,6 +25,17 @@ public interface SysUserConverter {
      * @param user      转换的目标对象
      * @return SysUser对象
      */
-    SysUser doToSysUser(SysUserDo sysUserDo, @MappingTarget SysUser user);
+    @Mapping(target = "id", source = "sysUserDo.id")
+    @Mapping(target = "username", source = "sysUserDo.username")
+    @Mapping(target = "password", source = "sysUserDo.password")
+    @Mapping(target = "nickname", source = "sysUserDo.nickname")
+    @Mapping(target = "avatar", source = "sysUserDo.avatar")
+    @Mapping(target = "isAccountNonExpired", source = "sysUserDo.isAccountNonExpired")
+    @Mapping(target = "isAccountNonLocked", source = "sysUserDo.isAccountNonLocked")
+    @Mapping(target = "isCredentialsNonExpired", source = "sysUserDo.isCredentialsNonExpired")
+    @Mapping(target = "isEnabled", source = "sysUserDo.isEnabled")
+    @Mapping(target = "authorities", source = "user.authorities")
+    @Mapping(target = "roles", source = "user.roles")
+    SysUser doToSysUser(SysUserDo sysUserDo, SysUser user);
 
 }

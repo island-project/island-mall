@@ -31,11 +31,14 @@ public class Result {
      */
     private Long execution;
 
+    private Long timeStamp;
+
     public static Result isOk(Object data) {
         return Result.builder()
                 .code(SysResponseCodeEnum.SUCCESS.getCode())
                 .msg(SysResponseCodeEnum.SUCCESS.getMsg())
                 .data(data)
+                .timeStamp(System.currentTimeMillis())
                 .build();
     }
 
@@ -43,6 +46,7 @@ public class Result {
         return Result.builder()
                 .code(code)
                 .msg(msg)
+                .timeStamp(System.currentTimeMillis())
                 .build();
     }
 

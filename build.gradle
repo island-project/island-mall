@@ -71,12 +71,13 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.5.2.Final'
     // hutools 工具
     implementation 'cn.hutool:hutool-all:5.8.4'
+    // 用来解决MapStruct和Lombok一起使用冲突的问题
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
             'io.jsonwebtoken:jjwt-jackson:0.11.5'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    runtimeOnly 'com.taobao.arthas:arthas-spring-boot-starter:3.6.3'
     runtimeOnly 'mysql:mysql-connector-java'
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
@@ -84,6 +85,15 @@ dependencies {
         exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
     }
     testImplementation 'org.springframework.security:spring-security-test'
+}
+
+sourceSets {
+    main {
+        resources {
+            //可以将java目录下的所有非.java资源打包到classes下
+            srcDir 'src/main/java'
+        }
+    }
 }
 
 test {
