@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends AbstractAuthenticationProcessingFil
     private final static String PASSWORD_KEY = "password";
 
     public JwtAuthenticationFilter() {
-        super(new AntPathRequestMatcher("/sys/login", "POST"));
+        super(new AntPathRequestMatcher("/sys/auth/login", "POST"));
     }
 
     @Override

@@ -48,6 +48,9 @@ public class SysRoleDo {
     @TableField(value = "`zh_desc`")
     private String zhDesc;
 
+    @TableField(value = "`is_default_role`")
+    private Boolean isDefaultRole;
+
     /**
      * 创建时间
      */

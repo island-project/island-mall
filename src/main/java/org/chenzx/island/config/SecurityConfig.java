@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 // 这里需要将登录页面放行,permitAll()表示不再拦截，/login 登录的url，/refreshToken刷新token的url
                 //TODO 此处正常项目中放行的url还有很多，比如swagger相关的url，druid的后台url，一些静态资源
-                .antMatchers("/sys/login", "/refreshToken")
+                .antMatchers("/sys/auth/login", "/sys/auth/register", "/refreshToken")
                 .permitAll()
                 //hasRole()表示需要指定的角色才能访问资源
                 // anyRequest() 所有请求   authenticated() 必须被认证

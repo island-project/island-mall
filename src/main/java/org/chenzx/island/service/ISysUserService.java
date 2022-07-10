@@ -20,4 +20,22 @@ public interface ISysUserService extends IService<SysUserDo> {
      */
     SysUser queryUserByUsername(String username);
 
+    /**
+     * 判断用户名是否存在
+     *
+     * @param username 用户名
+     * @return 如果存在返回true
+     */
+    Boolean isExistenceUser(String username);
+
+    /**
+     * 创建用户
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param nickname 昵称
+     * @return 如果成功 返回true
+     */
+    SysUserDo createUser(String username, String password, String nickname);
+
 }

@@ -5,12 +5,15 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.converter.SysUserConverter;
+import org.chenzx.island.enums.SystemEnum;
 import org.chenzx.island.mapper.SysUserMapper;
 import org.chenzx.island.service.ISysUserService;
 import org.chenzx.island.vo.SysUser;
 import org.chenzx.island.vo.pojo.SysUserDo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 /**
  * @author 陈泽宣
@@ -24,6 +27,8 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> im
 
     private final SysUserMapper sysUserMapper;
     private final SysUserConverter sysUserConverter;
+    @Value("${security.default-avatar}")
+    private String defaultAvatar;
 
     /**
      * 查询用户对象
@@ -40,5 +45,28 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> im
             return null;
         }
         return sysUserConverter.doToSysUser(sysUserDo, sysUserMapper.queryUserAllInfo(sysUserDo.getId()));
+    }
+
+    @Override
+    public Boolean isExistenceUser(String username) {
+        LambdaQueryWrapper<SysUserDo> wrapper = Wrappers.lambdaQuery();
+        wrapper.eq(SysUserDo::getUsername, username);
+        return super.count(wrapper) > 0;
+    }
+
+    /**
+     * 创建用户
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @param nickname 昵称
+     * @return 如果成功 返回true
+     */
+    @Override
+    public SysUserDo createUser(String username, String password, String nickname) {
+        SysUserDo build = SysUserDo.builder().username(username).password(password).nickname(nickname).avatar(defaultAvatar).build();
+        boolean save = super.save(build);
+        Assert.isTrue(save, SystemEnum.ERROR_PROMPT.getValue());
+        return build;
     }
 }

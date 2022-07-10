@@ -1,5 +1,7 @@
 package org.chenzx.island.vo.pojo;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,6 +24,7 @@ public class SysUserDo {
     /**
      * 用户主键
      */
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
     private String id;
 
     /**

@@ -14,7 +14,8 @@ public enum SystemEnum {
     /**
      * token
      */
-    TOKEN_HEADER("Authorization", "token在http header中的key");
+    TOKEN_HEADER("Authorization", "token在http header中的key"),
+    ERROR_PROMPT("系统内部出现错误,请联系管理员或重试", "错误提示");
 
     SystemEnum(String value, String name) {
         this.value = value;
