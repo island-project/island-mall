@@ -6,4 +6,16 @@ spring:
 server:
   port: 8080
 
+mybatis-plus:
+  global-config:
+    db-config:
+      logic-delete-field: del_flag
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+jwt:
+  signature-key: 12341241251
+  access-token-expiration-time: 1
+  refresh-token-expiration-time: 3
+
 

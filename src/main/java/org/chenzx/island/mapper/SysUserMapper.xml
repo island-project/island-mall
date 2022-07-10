@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.chenzx.island.mapper.SysUserMapper">
+    <select id="queryUserAllInfo" resultMap="queryUserAllInfoResultMap">
+        select r.name as roles, a.name as auths
+        from sys_role as r
+        left join sys_auth as a on a.id in (select auth_id from sys_role_auth where role_id = r.id)
+        where r.id in (select role_id from sys_user_role where user_id = #{username})
+    </select>
+
+    <resultMap id="queryUserAllInfoResultMap" type="org.chenzx.island.vo.SysUser">
+        <collection property="roles" column="roles"/>
+        <collection property="authorities" column="auths"/>
+    </resultMap>
+</mapper>

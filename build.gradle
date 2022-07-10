@@ -67,6 +67,11 @@ dependencies {
     implementation group: 'com.alibaba', name: 'druid-spring-boot-starter', version: '1.2.11'
     // jjwt
     implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    // 对象映射
+    implementation 'org.mapstruct:mapstruct:1.5.2.Final'
+    // hutools 工具
+    implementation 'cn.hutool:hutool-all:5.8.4'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.2.Final'
     runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5',
             'io.jsonwebtoken:jjwt-jackson:0.11.5'
     compileOnly 'org.projectlombok:lombok'
