@@ -65,8 +65,6 @@ public class SysUser implements UserDetails {
 
     private List<? extends GrantedAuthority> authorities;
 
-    private List<String> roles;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;

@@ -1,5 +1,6 @@
 package org.chenzx.island.handler.security;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSONObject;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Map;
 
 /**
  * @author 陈泽宣
@@ -38,8 +40,10 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
         SysUser sysUser = (SysUser) authentication.getPrincipal();
-        String accessToken = jwtUtils.getJwtToken(JSONObject.toJSONString(sysUser), accessTokenExpirationTime);
-        String refreshToken = jwtUtils.getJwtToken(sysUser.getUsername(), refreshTokenExpirationTime);
+        Map<String, Object> map = BeanUtil.beanToMap(sysUser);
+        map.remove("password");
+        String accessToken = jwtUtils.getJwtToken(map, accessTokenExpirationTime);
+        String refreshToken = jwtUtils.getJwtToken(map.get("username"), refreshTokenExpirationTime);
         Result result = Result.isOk(Token.builder().accessToken(accessToken).refreshToken(refreshToken).build());
         response.setHeader("Content-type", "application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
@@ -50,7 +54,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
 
     @Data
     @Builder
-    private static class Token {
+    public static class Token {
         private String accessToken;
         private String refreshToken;
     }

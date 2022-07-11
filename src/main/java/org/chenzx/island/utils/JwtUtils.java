@@ -1,5 +1,6 @@
 package org.chenzx.island.utils;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
@@ -67,11 +68,11 @@ public class JwtUtils {
      * @param token jwt token
      * @return 解析后的对象
      */
-    public Object checkAndParseToken(String token) {
+    public Map<String, Object> parseToken(String token) {
         if (!checkToken(token)) {
             throw new RuntimeException("token无效");
         }
-        Object data = JWTUtil.parseToken(token).getPayload(KEY);
+        Map<String, Object> data = BeanUtil.beanToMap(JWTUtil.parseToken(token).getPayload(KEY));
         if (data == null) {
             throw new RuntimeException("token无效");
         }

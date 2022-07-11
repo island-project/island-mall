@@ -2,7 +2,7 @@ package org.chenzx.island.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
-import org.chenzx.island.vo.SysUser;
+import org.chenzx.island.vo.dto.AuthRoleDto;
 import org.chenzx.island.vo.pojo.SysUserDo;
 
 /**
@@ -20,6 +20,6 @@ public interface SysUserMapper extends BaseMapper<SysUserDo> {
      * @param userId 用户主键
      * @return 包含用户权限、角色信息的对象
      */
-    SysUser queryUserAllInfo(String userId);
+    AuthRoleDto queryUserAllInfo(String userId);
 
 }

@@ -1,6 +1,7 @@
 package org.chenzx.island.converter;
 
 import org.chenzx.island.vo.SysUser;
+import org.chenzx.island.vo.dto.AuthRoleDto;
 import org.chenzx.island.vo.pojo.SysUserDo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,8 +35,9 @@ public interface SysUserConverter {
     @Mapping(target = "isAccountNonLocked", source = "sysUserDo.isAccountNonLocked")
     @Mapping(target = "isCredentialsNonExpired", source = "sysUserDo.isCredentialsNonExpired")
     @Mapping(target = "isEnabled", source = "sysUserDo.isEnabled")
-    @Mapping(target = "authorities", source = "user.authorities")
-    @Mapping(target = "roles", source = "user.roles")
-    SysUser doToSysUser(SysUserDo sysUserDo, SysUser user);
+    @Mapping(
+            target = "authorities",
+            expression = "java(org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(\",\",java.util.stream.Stream.of(user.getAuths(),user.getRoles()).flatMap(java.util.Collection::stream).collect(java.util.stream.Collectors.toList()))))")
+    SysUser doToSysUser(SysUserDo sysUserDo, AuthRoleDto user);
 
 }

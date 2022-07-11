@@ -3,9 +3,14 @@ package org.chenzx.island.filter.security;
 import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.chenzx.island.business.JwtTokenUserDetailsServiceImpl;
 import org.chenzx.island.enums.SystemEnum;
 import org.chenzx.island.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -27,13 +32,17 @@ import java.io.IOException;
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
+    private final JwtTokenUserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader(SystemEnum.TOKEN_HEADER.getValue());
         if (StrUtil.isNotEmpty(token) && jwtUtils.checkToken(token)) {
+            UserDetails userDetails = userDetailsService.loadUserByUsername((String) jwtUtils.parseToken(token).get("username"));
             // token校验成功,应该放入ThreadLocal中,方便后续校验
-            log.info("token校验成功! token:{}", token);
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+            authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
         }
         filterChain.doFilter(request, response);
     }

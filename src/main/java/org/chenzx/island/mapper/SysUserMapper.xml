@@ -8,12 +8,12 @@
         where r.id in (select role_id from sys_user_role where user_id = #{userId})
     </select>
 
-    <resultMap id="queryUserAllInfoResultMap" type="org.chenzx.island.vo.SysUser">
+    <resultMap id="queryUserAllInfoResultMap" type="org.chenzx.island.vo.dto.AuthRoleDto">
+        <collection property="auths" ofType="java.lang.String">
+            <result column="auths"/>
+        </collection>
         <collection property="roles" ofType="java.lang.String">
             <result column="roles"/>
-        </collection>
-        <collection property="authorities" ofType="org.springframework.security.core.authority.SimpleGrantedAuthority">
-            <result column="auths"/>
         </collection>
     </resultMap>
 </mapper>
