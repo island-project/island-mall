@@ -27,7 +27,7 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> im
 
     private final SysUserMapper sysUserMapper;
     private final SysUserConverter sysUserConverter;
-    @Value("${security.default-avatar}")
+    @Value("${user.default-avatar}")
     private String defaultAvatar;
 
     /**

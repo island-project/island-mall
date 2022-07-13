@@ -17,11 +17,12 @@ public enum SysResponseCodeEnum {
     SUCCESS(200, "成功!"),
     ERROR(500, "失败"),
 
-    // Spring Security
+    // =================  Spring Security  =================
     SECURITY_USERNAME_PASSWORD_ERROR(10000, "用户名或密码错误"),
 
     SECURITY_LOGIN_REQUIRED(10001, "需要登录"),
-    SECURITY_UNAUTHORIZED_ACCESS(10002, "无权限访问");
+    SECURITY_UNAUTHORIZED_ACCESS(10002, "无权限访问"),
+    SECURITY_TOKEN_INVALID(10003, "token无效或已经过期");
 
     SysResponseCodeEnum(Integer code, String msg) {
         this.code = code;

@@ -16,12 +16,17 @@ mybatis-plus:
 #  configuration:
 #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+user:
+  default-avatar: https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif
+
 jwt:
   signature-key: 12341241251
   access-token-expiration-time: 1
   refresh-token-expiration-time: 3
 
 security:
-  default-avatar: https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif
-
-
+  exclude-url:
+    - /sys/auth/login
+    - /sys/auth/logout
+    - /sys/auth/refreshToken
+    - /sys/auth/register

@@ -14,6 +14,11 @@
       "name": "jwt.refresh-token-expiration-time",
       "type": "java.lang.Integer",
       "description": "Description for jwt.refresh-token-expiration-time."
+    },
+    {
+      "name": "security.exclude-url",
+      "type": "java.lang.String",
+      "description": "Description for security.exclude-url."
     }
   ]
 }

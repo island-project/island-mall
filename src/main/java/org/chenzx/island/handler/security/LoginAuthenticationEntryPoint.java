@@ -2,6 +2,7 @@ package org.chenzx.island.handler.security;
 
 import com.alibaba.fastjson.JSONObject;
 import org.chenzx.island.vo.Result;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -13,6 +14,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import static org.chenzx.island.enums.SysResponseCodeEnum.SECURITY_LOGIN_REQUIRED;
+import static org.chenzx.island.enums.SysResponseCodeEnum.SECURITY_TOKEN_INVALID;
 
 /**
  * @author 陈泽宣
@@ -25,7 +27,12 @@ public class LoginAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        Result result = Result.error(SECURITY_LOGIN_REQUIRED.getCode(), SECURITY_LOGIN_REQUIRED.getMsg());
+        Result result;
+        if (authException instanceof InsufficientAuthenticationException) {
+            result = Result.error(SECURITY_TOKEN_INVALID.getCode(), SECURITY_TOKEN_INVALID.getMsg());
+        } else {
+            result = Result.error(SECURITY_LOGIN_REQUIRED.getCode(), SECURITY_LOGIN_REQUIRED.getMsg());
+        }
         response.setHeader("Content-type", "application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
         writer.write(JSONObject.toJSONString(result));

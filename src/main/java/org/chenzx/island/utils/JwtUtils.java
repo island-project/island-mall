@@ -5,12 +5,14 @@ import cn.hutool.core.date.DateField;
 import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.IdUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSigner;
 import cn.hutool.jwt.signers.JWTSignerUtil;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.chenzx.island.exception.NoTokenException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -85,7 +87,10 @@ public class JwtUtils {
      * @param token jwt
      * @throws ValidateException 当jwt过期、jwt签名不合法时,抛出该异常
      */
-    public void checkTokenException(String token) throws ValidateException {
+    public void checkTokenException(String token) throws ValidateException, NoTokenException {
+        if (StrUtil.isEmpty(token)) {
+            throw new NoTokenException("token不能为空!");
+        }
         JWTValidator.of(token).validateDate(DateUtil.date()).validateAlgorithm(signer);
     }
 

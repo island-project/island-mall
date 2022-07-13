@@ -1,4 +1,4 @@
-package org.chenzx.island.config;
+package org.chenzx.island.config.security;
 
 import org.chenzx.island.filter.security.JwtAuthenticationFilter;
 import org.chenzx.island.handler.security.LoginAuthenticationFailureHandler;

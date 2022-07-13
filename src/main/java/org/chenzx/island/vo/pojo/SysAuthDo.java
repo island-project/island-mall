@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -22,7 +23,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName(value = "sys_auth")
-public class SysAuthDo {
+public class SysAuthDo implements Serializable {
     /**
      * 主键
      */
@@ -52,6 +53,12 @@ public class SysAuthDo {
      */
     @TableField(value = "`zh_desc`")
     private String zhDesc;
+
+    /**
+     * 权重
+     */
+    @TableField(value = "`weight`")
+    private Integer weight;
 
     /**
      * 创建时间

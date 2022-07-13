@@ -22,7 +22,7 @@ import org.springframework.util.Assert;
 @Service
 @Transactional(rollbackFor = {Exception.class})
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
-public class SysAuthService {
+public class SysAuthenticationService {
 
     private final ISysUserService sysUserService;
     private final ISysRoleService sysRoleService;

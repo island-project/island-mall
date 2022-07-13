@@ -1,4 +1,4 @@
-package org.chenzx.island.config;
+package org.chenzx.island.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.filter.security.TokenAuthenticationFilter;
@@ -6,9 +6,11 @@ import org.chenzx.island.handler.security.LoginAuthenticationEntryPoint;
 import org.chenzx.island.handler.security.RequestAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.ObjectPostProcessor;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -25,6 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final LoginAuthenticationEntryPoint loginAuthenticationEntryPoint;
     private final RequestAccessDeniedHandler requestAccessDeniedHandler;
     private final TokenAuthenticationFilter tokenAuthenticationFilter;
+    private final FilterInvocationSecurityMetadataSourceImpl filterInvocationSecurityMetadataSource;
+    private final AccessDecisionManagerImpl accessDecisionManager;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -37,11 +41,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 // 设置URL的授权
                 .authorizeRequests()
-                // 这里需要将登录页面放行,permitAll()表示不再拦截，/login 登录的url，/refreshToken刷新token的url
-                //TODO 此处正常项目中放行的url还有很多，比如swagger相关的url，druid的后台url，一些静态资源
-                .antMatchers("/sys/auth/login", "/sys/auth/register", "/refreshToken")
-                .permitAll()
-                //hasRole()表示需要指定的角色才能访问资源
+                .withObjectPostProcessor(new ObjectPostProcessor<FilterSecurityInterceptor>() {
+                    // 设置鉴权过滤器,一个用来获取访问该路径需要的权限,另一个用来检查用户是否具有该权限
+                    @Override
+                    public <O extends FilterSecurityInterceptor> O postProcess(O object) {
+                        object.setSecurityMetadataSource(filterInvocationSecurityMetadataSource);
+                        object.setAccessDecisionManager(accessDecisionManager);
+                        return object;
+                    }
+                })
                 // anyRequest() 所有请求   authenticated() 必须被认证
                 .anyRequest()
                 .authenticated()
