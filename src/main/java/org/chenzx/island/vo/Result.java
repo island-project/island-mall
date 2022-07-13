@@ -27,10 +27,8 @@ public class Result {
      */
     private Object data;
     /**
-     * 执行时间
+     * 时间戳
      */
-    private Long execution;
-
     private Long timeStamp;
 
     public static Result isOk(Object data) {

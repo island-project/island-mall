@@ -1,6 +1,5 @@
 package org.chenzx.island.config.aop;
 
-import cn.hutool.core.date.DateUtil;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -33,8 +32,7 @@ public class InterfaceExecutionTimeAop {
 
         object = joinPoint.proceed();
 
-        log.info("[{}]: execute {} success! args: {} ,execution time: {}"
-                , DateUtil.now()
+        log.info("execute {} success! args: {} ,execution time: {}"
                 , joinPoint.getTarget().getClass().getName()
                 , joinPoint.getArgs(), stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
         return object;
