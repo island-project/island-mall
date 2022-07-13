@@ -55,6 +55,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-validation'
     // web
     implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-aop'
     // json格式化工具
     implementation 'com.alibaba:fastjson:2.0.7'
     // mybatis-plus

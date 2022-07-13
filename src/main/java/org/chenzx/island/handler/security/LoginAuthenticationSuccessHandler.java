@@ -43,7 +43,7 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
         Map<String, Object> map = BeanUtil.beanToMap(sysUser);
         map.remove("password");
         String accessToken = jwtUtils.getJwtToken(map, accessTokenExpirationTime);
-        String refreshToken = jwtUtils.getJwtToken(map.get("username"), refreshTokenExpirationTime);
+        String refreshToken = jwtUtils.getJwtToken(map.get("id"), refreshTokenExpirationTime);
         Result result = Result.isOk(Token.builder().accessToken(accessToken).refreshToken(refreshToken).build());
         response.setHeader("Content-type", "application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();
