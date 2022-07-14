@@ -1,5 +1,6 @@
 package org.chenzx.island.config.aop;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Stopwatch;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 @Aspect
 @Component
-public class InterfaceExecutionTimeAop {
+public class InterfaceCallInfoAop {
 
     @Pointcut("execution(* org.chenzx.island.controller..*.*(..))")
     private void pointCut() {
@@ -32,9 +33,11 @@ public class InterfaceExecutionTimeAop {
 
         object = joinPoint.proceed();
 
-        log.info("execute {} success! args: {} ,execution time: {}"
+        log.info("execute {} success! args: {} response:{} ,execution time: {}"
                 , joinPoint.getTarget().getClass().getName()
-                , joinPoint.getArgs(), stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
+                , joinPoint.getArgs()
+                , JSONObject.toJSONString(object)
+                , stopwatch.elapsed(TimeUnit.MILLISECONDS) + "ms");
         return object;
     }
 

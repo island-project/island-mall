@@ -16,6 +16,7 @@ public enum SysResponseCodeEnum {
      */
     SUCCESS(200, "成功!"),
     ERROR(500, "失败"),
+    REQUEST_PARAMETER_EXCEPTION(-1, "请求参数异常"),
 
     // =================  Spring Security  =================
     SECURITY_USERNAME_PASSWORD_ERROR(10000, "用户名或密码错误"),

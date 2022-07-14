@@ -2,6 +2,7 @@ package org.chenzx.island.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.business.SysAuthenticationService;
+import org.chenzx.island.vo.RefreshTokenVo;
 import org.chenzx.island.vo.RegisterFormVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -9,8 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import javax.validation.constraints.NotNull;
 
 /**
  * @author 陈泽宣
@@ -37,8 +36,8 @@ public class SysAuthController {
     }
 
     @PostMapping(value = "/refreshToken")
-    public String getAccessTokenByRefreshToken(@RequestBody @Validated @NotNull(message = "刷新令牌不能为空!") String refreshToken) {
-        return null;
+    public String getAccessTokenByRefreshToken(@RequestBody @Validated RefreshTokenVo req) {
+        return sysAuthenticationService.getAccessTokenByRefreshToken(req);
     }
 
 }

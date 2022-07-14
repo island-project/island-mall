@@ -6,6 +6,7 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.jwt.JWTException;
 import cn.hutool.jwt.JWTUtil;
 import cn.hutool.jwt.JWTValidator;
 import cn.hutool.jwt.signers.JWTSigner;
@@ -72,11 +73,11 @@ public class JwtUtils {
      */
     public Map<String, Object> parseToken(String token) {
         if (!checkToken(token)) {
-            throw new RuntimeException("token无效");
+            throw new ValidateException("token无效");
         }
         Map<String, Object> data = BeanUtil.beanToMap(JWTUtil.parseToken(token).getPayload(KEY));
         if (data == null) {
-            throw new RuntimeException("token无效");
+            throw new ValidateException("token无效");
         }
         return data;
     }
@@ -91,7 +92,12 @@ public class JwtUtils {
         if (StrUtil.isEmpty(token)) {
             throw new NoTokenException("token不能为空!");
         }
-        JWTValidator.of(token).validateDate(DateUtil.date()).validateAlgorithm(signer);
+        try {
+            JWTValidator.of(token).validateDate(DateUtil.date()).validateAlgorithm(signer);
+        } catch (JWTException e) {
+            throw new ValidateException();
+        }
+
     }
 
     /**
@@ -100,10 +106,13 @@ public class JwtUtils {
      * @param token jwt
      * @return token合法返回true, 否则false
      */
-    public Boolean checkToken(String token) throws ValidateException {
+    public Boolean checkToken(String token) {
+        if (StrUtil.isEmpty(token)) {
+            return false;
+        }
         try {
             JWTValidator.of(token).validateDate(DateUtil.date()).validateAlgorithm(signer);
-        } catch (ValidateException e) {
+        } catch (Exception e) {
             return false;
         }
         return true;
