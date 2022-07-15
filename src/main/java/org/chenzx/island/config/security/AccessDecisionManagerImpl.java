@@ -35,7 +35,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
             // 获取访问该路径需要的权限
             String attribute = ca.getAttribute();
             if (FilterInvocationSecurityMetadataSourceImpl.NO_PERMISSION.equals(attribute)) {
-                return;
+                throw new AccessDeniedException("无权限访问");
             }
             FilterInvocation filterInvocation = (FilterInvocation) object;
             String token = filterInvocation.getHttpRequest().getHeader(SystemEnum.TOKEN_HEADER.getValue());

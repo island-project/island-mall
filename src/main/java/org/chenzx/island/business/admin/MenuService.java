@@ -16,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static org.chenzx.island.enums.MenuTypeEnum.*;
+
 /**
  * @author 陈泽宣
  * @version 1.0
@@ -37,40 +39,51 @@ public class MenuService {
         List<SysAdminFunctionMenuDo> allMenus = sysAdminFunctionMenuService.queryAllEnableMenu();
         // 按照菜单级别分组
         Map<Integer, List<SysAdminFunctionMenuDo>> levelMap = allMenus.stream().collect(Collectors.groupingBy(SysAdminFunctionMenuDo::getLevel));
-        List<MenuVo> current = null;
-        for (Integer level : levelMap.keySet()) {
-            if (level.equals(0)) {
-                List<MenuVo> firstMenu = levelMap.get(level).stream().map(sysAdminFunctionMenuConverter::toMenuVo).collect(Collectors.toList());
-                result.addAll(firstMenu);
-                current = firstMenu;
-            }
-            if (levelMap.get(level + 1) == null) {
-                break;
-            }
-            current = assemblyTree(current, levelMap.get(level + 1));
-        }
-        return result;
+        List<MenuVo> rootMenu = levelMap.get(0).stream().map(sysAdminFunctionMenuConverter::toMenuVo).collect(Collectors.toList());
+        recursiveAssemblyMenu(rootMenu, levelMap, 0);
+        return rootMenu;
     }
 
     /**
-     * 组装树
+     * 使用递归来组装菜单
      *
-     * @param current 当前级别的树
-     * @param next    下一级别的树
-     * @return 下一级别的树组装好的对象
+     * @param menus 当前级别下的菜单
+     * @param all   系统中全部的菜单
+     * @param level menus中的level(等级)
      */
-    private List<MenuVo> assemblyTree(List<MenuVo> current, List<SysAdminFunctionMenuDo> next) {
-        List<MenuVo> list = Lists.newArrayList();
-        Map<String, List<SysAdminFunctionMenuDo>> nextMap = next.stream().collect(Collectors.groupingBy(SysAdminFunctionMenuDo::getFatherId));
-        for (MenuVo menu : current) {
-            List<MenuVo> nextResult = nextMap.get(menu.getId()).stream().map(sysAdminFunctionMenuConverter::toMenuVo).collect(Collectors.toList());
-            if (nextResult.size() < 1) {
-                continue;
-            }
-            menu.setChildren(nextResult);
-            list.addAll(nextResult);
+    private void recursiveAssemblyMenu(List<MenuVo> menus, Map<Integer, List<SysAdminFunctionMenuDo>> all, Integer level) {
+        if (all.get(level + 1) == null) {
+            return;
         }
-        return list;
+        // 待组装的level + 1级的菜单
+        List<SysAdminFunctionMenuDo> menuList = all.get(level + 1);
+        // level + 1 层级下的所有菜单
+        List<MenuVo> list = Lists.newArrayList();
+        for (MenuVo menu : menus) {
+            List<MenuVo> collect = menuList.stream()
+                    .filter(v -> v.getFatherId().equals(menu.getId()))
+                    .map(v -> {
+                        // 如果是外链 需要特殊处理
+                        if (EXTERNAL_LINKS.getValue().equals(v.getType())) {
+                            return MenuVo.builder()
+                                    .id(v.getId())
+                                    .path(v.getRequestPath())
+                                    .component("Layout")
+                                    .children(
+                                            Lists.newArrayList(MenuVo.builder().path(v.getComponentPath()).meta(new MenuVo.Meta(v.getName(), v.getIcon())).build())
+                                    )
+                                    .build();
+                        } else if (DIRECTORY.getValue().equals(v.getType()) || VIEW.getValue().equals(v.getType())) {
+                            return sysAdminFunctionMenuConverter.toMenuVo(v);
+                        }
+                        return null;
+                    })
+                    .collect(Collectors.toList());
+            menu.setChildren(collect);
+            list.addAll(collect);
+        }
+        // 递归调用 去组装下一级的目录
+        recursiveAssemblyMenu(list, all, level + 1);
     }
 
 }
