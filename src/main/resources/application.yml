@@ -5,6 +5,8 @@ spring:
     active: dev
 server:
   port: 8080
+  servlet:
+    context-path: /island
 
 mybatis-plus:
   global-config:
@@ -31,3 +33,6 @@ security:
     - /sys/auth/refreshToken
     - /sys/auth/register
   redis-key: sys_auth_user
+
+swagger:
+  enabled: true
