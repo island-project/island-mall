@@ -1,11 +1,11 @@
 package org.chenzx.island.action.security.business;
 
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.action.security.config.SecurityConfigurationProperties;
 import org.chenzx.island.action.security.pojo.SysAuthDo;
 import org.chenzx.island.action.security.service.ISysAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
@@ -13,9 +13,9 @@ import org.springframework.security.web.access.intercept.FilterInvocationSecurit
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
-import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
  * @author 陈泽宣
@@ -28,8 +28,6 @@ import java.util.List;
 public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocationSecurityMetadataSource {
 
     private final ISysAuthService sysAuthService;
-    @Resource
-    private RedisTemplate<String, Object> redisTemplate;
     private final SecurityConfigurationProperties securityProperties;
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
     protected static final String NO_PERMISSION = "noPermission";
@@ -43,13 +41,16 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
             return null;
         }
         List<SysAuthDo> sysAuthList = getAllAuthMap();
+        Set<String> requiredPermissions = Sets.newHashSet();
         for (SysAuthDo auth : sysAuthList) {
             if (ANT_PATH_MATCHER.match(auth.getUrl(), requestUrl)) {
-                return SecurityConfig.createList(auth.getName());
+                requiredPermissions.add(auth.getName());
             }
         }
 
-        return SecurityConfig.createList(NO_PERMISSION);
+        return requiredPermissions.size() < 1 ?
+                SecurityConfig.createList(NO_PERMISSION) :
+                SecurityConfig.createListFromCommaDelimitedString(String.join(",", requiredPermissions));
     }
 
     private List<SysAuthDo> getAllAuthMap() {

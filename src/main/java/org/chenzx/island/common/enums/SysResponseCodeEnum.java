@@ -14,7 +14,7 @@ public enum SysResponseCodeEnum {
     /**
      * 成功
      */
-    SUCCESS(200, "成功!"),
+    SUCCESS(200, "success!"),
     ERROR(500, "内部服务器错误,请联系管理员"),
     REQUEST_PARAMETER_EXCEPTION(-1, "请求参数异常");
 

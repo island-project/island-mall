@@ -3,6 +3,7 @@ package org.chenzx.island.common.handler;
 import lombok.extern.slf4j.Slf4j;
 import org.chenzx.island.action.security.enums.SecurityEnum;
 import org.chenzx.island.action.security.exception.RefreshTokenExpiredException;
+import org.chenzx.island.common.exception.BusinessException;
 import org.chenzx.island.common.pojo.Result;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -66,7 +67,7 @@ public class RestExceptionHandler {
      * @param e 异常对象
      * @return 封装后的返回前端的异常信息
      */
-    @ExceptionHandler({IllegalArgumentException.class, Exception.class})
+    @ExceptionHandler({IllegalArgumentException.class, Exception.class, BusinessException.class})
     public Result currencyExceptionHandle(Exception e) {
         log.error(e.getMessage());
         return Result.error(ERROR.getCode(), e.getLocalizedMessage());
