@@ -32,7 +32,6 @@ security:
     - /sys/auth/logout
     - /sys/auth/refreshToken
     - /sys/auth/register
-  redis-key: sys_auth_user
 
 swagger:
   enabled: true

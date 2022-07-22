@@ -1,4 +1,4 @@
-package org.chenzx.island.common.vo;
+package org.chenzx.island.common.pojo;
 
 import lombok.Builder;
 import lombok.Data;

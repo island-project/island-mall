@@ -1,10 +1,9 @@
 package org.chenzx.island.action.security.business;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.exceptions.ValidateException;
-import cn.hutool.core.util.StrUtil;
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.action.security.config.SecurityConfigurationProperties;
+import org.chenzx.island.action.security.exception.RefreshTokenExpiredException;
 import org.chenzx.island.action.security.pojo.RefreshTokenVo;
 import org.chenzx.island.action.security.pojo.RegisterFormVo;
 import org.chenzx.island.action.security.pojo.SysUser;
@@ -60,12 +59,12 @@ public class SysAuthenticationService {
     public String getAccessTokenByRefreshToken(RefreshTokenVo req) {
         String refreshToken = req.getRefreshToken();
         // 校验token是否有效
-        jwtUtils.checkTokenException(refreshToken);
+        Boolean isCheck = jwtUtils.checkToken(refreshToken);
+        if (!isCheck) {
+            throw new RefreshTokenExpiredException();
+        }
         Map<String, Object> jwtTokenMap = jwtUtils.parseToken(refreshToken);
         String username = (String) jwtTokenMap.get("username");
-        if (StrUtil.isEmpty(username)) {
-            throw new ValidateException();
-        }
 
         SysUser sysUser = sysUserService.queryUserByUsername(username);
         Map<String, Object> sysUserMap = BeanUtil.beanToMap(sysUser);

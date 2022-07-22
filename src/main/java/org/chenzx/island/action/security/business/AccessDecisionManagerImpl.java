@@ -1,8 +1,6 @@
 package org.chenzx.island.action.security.business;
 
-import cn.hutool.core.exceptions.ValidateException;
 import lombok.RequiredArgsConstructor;
-import org.chenzx.island.action.security.exception.NoTokenException;
 import org.chenzx.island.common.enums.SystemEnum;
 import org.chenzx.island.common.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +27,30 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
 
     private final JwtUtils jwtUtils;
 
+    /**
+     * 需要判断两个东西
+     * 1. 用户的token是否过期,如果过期让前端尝试刷新token
+     * 2. 用户是否有权限访问该接口
+     *
+     * @param authentication   the caller invoking the method (not null)
+     * @param object           the secured object being called
+     * @param configAttributes the configuration attributes associated with the secured
+     *                         object being invoked
+     * @throws AccessDeniedException               用户无权限访问该接口时抛出该异常
+     * @throws InsufficientAuthenticationException 用户token过期时抛出该类的子类TokenExpiredException异常
+     */
     @Override
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
         for (ConfigAttribute ca : configAttributes) {
             // 获取访问该路径需要的权限
             String attribute = ca.getAttribute();
             if (FilterInvocationSecurityMetadataSourceImpl.NO_PERMISSION.equals(attribute)) {
-                throw new AccessDeniedException("无权限访问");
+                // 如果数据库中未配置权限,则默认允许任何角色(包括未登录)访问访问
+                // 此处也一定要注意,需要授权的路径一定要在sys_auth表中配置
+                return;
             }
             FilterInvocation filterInvocation = (FilterInvocation) object;
-            String token = filterInvocation.getHttpRequest().getHeader(SystemEnum.TOKEN_HEADER.getValue());
-            try {
-                jwtUtils.checkTokenException(token);
-            } catch (ValidateException ex) {
-                throw new InsufficientAuthenticationException("token无效或token过期");
-            } catch (NoTokenException ex) {
-                throw new InsufficientAuthenticationException("需要登录");
-            }
+            jwtUtils.securityCheckToken(filterInvocation.getHttpRequest().getHeader(SystemEnum.TOKEN_HEADER.getValue()));
 
             Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
             for (GrantedAuthority authority : authorities) {
@@ -54,7 +59,7 @@ public class AccessDecisionManagerImpl implements AccessDecisionManager {
                 }
             }
         }
-        throw new AccessDeniedException("无权限访问");
+        throw new AccessDeniedException(null);
     }
 
     @Override

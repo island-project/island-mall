@@ -6,10 +6,9 @@ import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.chenzx.island.action.security.config.SecurityConfigurationProperties;
 import org.chenzx.island.action.security.pojo.SysUser;
+import org.chenzx.island.common.pojo.Result;
 import org.chenzx.island.common.utils.JwtUtils;
-import org.chenzx.island.common.vo.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -41,7 +40,6 @@ public class LoginAuthenticationSuccessHandler implements AuthenticationSuccessH
     private Integer accessTokenExpirationTime;
     @Value("${jwt.refresh-token-expiration-time}")
     private Integer refreshTokenExpirationTime;
-    private final SecurityConfigurationProperties securityConfigurationProperties;
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

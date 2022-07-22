@@ -14,7 +14,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 
 import javax.annotation.Resource;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,7 +32,6 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     private RedisTemplate<String, Object> redisTemplate;
     private final SecurityConfigurationProperties securityProperties;
     private static final AntPathMatcher ANT_PATH_MATCHER = new AntPathMatcher();
-    private static final String REDIS_HASH_KEY = "sys_auth_url";
     protected static final String NO_PERMISSION = "noPermission";
 
     @Override
@@ -55,14 +53,7 @@ public class FilterInvocationSecurityMetadataSourceImpl implements FilterInvocat
     }
 
     private List<SysAuthDo> getAllAuthMap() {
-        Object sysAuth = redisTemplate.opsForValue().get(REDIS_HASH_KEY);
-        if (sysAuth == null) {
-            List<SysAuthDo> sysAuthDos = sysAuthService.queryAllSysAuth();
-            redisTemplate.opsForValue().set(REDIS_HASH_KEY, sysAuthDos, Duration.ofMinutes(1));
-            return sysAuthDos;
-        }
-
-        return (List<SysAuthDo>) sysAuth;
+        return sysAuthService.queryAllSysAuth();
     }
 
     @Override

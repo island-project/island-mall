@@ -1,8 +1,9 @@
 package org.chenzx.island.common.handler;
 
-import cn.hutool.core.exceptions.ValidateException;
 import lombok.extern.slf4j.Slf4j;
-import org.chenzx.island.common.vo.Result;
+import org.chenzx.island.action.security.enums.SecurityEnum;
+import org.chenzx.island.action.security.exception.RefreshTokenExpiredException;
+import org.chenzx.island.common.pojo.Result;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
-import static org.chenzx.island.common.enums.SysResponseCodeEnum.*;
+import static org.chenzx.island.common.enums.SysResponseCodeEnum.ERROR;
+import static org.chenzx.island.common.enums.SysResponseCodeEnum.REQUEST_PARAMETER_EXCEPTION;
 
 /**
  * @author 陈泽宣
@@ -48,19 +50,26 @@ public class RestExceptionHandler {
     }
 
     /**
-     * jwt 校验失败异常处理器
+     * 刷新令牌过期异常处理器
      *
-     * @param ex 异常对象
+     * @param e 异常对象
      * @return 封装后的返回前端的异常信息
      */
-    @ExceptionHandler({ValidateException.class})
-    public Result jwtTokenExceptionHandler(ValidateException ex) {
-        return Result.error(SECURITY_TOKEN_INVALID.getCode(), SECURITY_TOKEN_INVALID.getMsg());
+    @ExceptionHandler({RefreshTokenExpiredException.class})
+    public Result refreshTokenExpiredExceptionHandler(RefreshTokenExpiredException e) {
+        return Result.error(SecurityEnum.SECURITY_REFRESH_TOKEN_EXPIRED.getCode(), SecurityEnum.SECURITY_REFRESH_TOKEN_EXPIRED.getMsg());
     }
 
-    @ExceptionHandler({Exception.class})
-    public Result exceptionHandler(Exception e) {
-        return Result.error(ERROR.getCode(), "内部服务器错误,请联系管理员");
+    /**
+     * 通用异常处理器,处理断言失败的异常和其他未被定义的异常
+     *
+     * @param e 异常对象
+     * @return 封装后的返回前端的异常信息
+     */
+    @ExceptionHandler({IllegalArgumentException.class, Exception.class})
+    public Result currencyExceptionHandle(Exception e) {
+        log.error(e.getMessage());
+        return Result.error(ERROR.getCode(), e.getLocalizedMessage());
     }
 
 }

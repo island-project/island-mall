@@ -16,7 +16,7 @@ public class AuthRoleDto {
     /**
      * 用户角色列表
      */
-    private List<String> roles;
+    private String roles;
 
     /**
      * 用户权限列表

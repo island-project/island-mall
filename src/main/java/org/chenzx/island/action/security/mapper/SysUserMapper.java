@@ -5,6 +5,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.chenzx.island.action.security.pojo.AuthRoleDto;
 import org.chenzx.island.action.security.pojo.SysUserDo;
 
+import java.util.List;
+
 /**
  * @author 陈泽宣
  * @version 1.0
@@ -20,6 +22,6 @@ public interface SysUserMapper extends BaseMapper<SysUserDo> {
      * @param userId 用户主键
      * @return 包含用户权限、角色信息的对象
      */
-    AuthRoleDto queryUserAllInfo(String userId);
+    List<AuthRoleDto> queryUserAllInfo(String userId);
 
 }

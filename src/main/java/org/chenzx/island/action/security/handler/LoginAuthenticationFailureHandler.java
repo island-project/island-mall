@@ -1,7 +1,7 @@
 package org.chenzx.island.action.security.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import org.chenzx.island.common.vo.Result;
+import org.chenzx.island.common.pojo.Result;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.chenzx.island.common.enums.SysResponseCodeEnum.ERROR;
-import static org.chenzx.island.common.enums.SysResponseCodeEnum.SECURITY_USERNAME_PASSWORD_ERROR;
+import static org.chenzx.island.action.security.enums.SecurityEnum.SECURITY_OTHER_ERRORS;
+import static org.chenzx.island.action.security.enums.SecurityEnum.SECURITY_USERNAME_PASSWORD_ERROR;
 
 /**
  * @author 陈泽宣
@@ -31,7 +31,7 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
         if (exception instanceof BadCredentialsException) {
             result = Result.error(SECURITY_USERNAME_PASSWORD_ERROR.getCode(), SECURITY_USERNAME_PASSWORD_ERROR.getMsg());
         } else {
-            result = Result.error(ERROR.getCode(), exception.getMessage());
+            result = Result.error(SECURITY_OTHER_ERRORS.getCode(), exception.getLocalizedMessage());
         }
         response.setHeader("Content-type", "application/json;charset=UTF-8");
         PrintWriter writer = response.getWriter();

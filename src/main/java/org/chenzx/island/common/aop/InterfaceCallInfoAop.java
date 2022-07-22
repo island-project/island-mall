@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class InterfaceCallInfoAop {
 
-    @Pointcut("execution(* org.chenzx.island.controller..*.*(..))")
+    @Pointcut("execution(* org.chenzx.island.action.*.controller..*.*(..))")
     private void pointCut() {
     }
 

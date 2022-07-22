@@ -35,6 +35,12 @@ public class SysAuthController {
         return sysAuthenticationService.register(request);
     }
 
+    /**
+     * 刷新令牌接口
+     *
+     * @param req 请求参数
+     * @return 新的access token
+     */
     @PostMapping(value = "/refreshToken")
     public String getAccessTokenByRefreshToken(@RequestBody @Validated RefreshTokenVo req) {
         return sysAuthenticationService.getAccessTokenByRefreshToken(req);

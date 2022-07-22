@@ -22,9 +22,4 @@ public class SecurityConfigurationProperties {
      */
     private List<String> excludeUrl;
 
-    /**
-     * redis中存放用户登录状态的key
-     */
-    private String redisKey;
-
 }

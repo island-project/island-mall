@@ -1,11 +1,13 @@
 package org.chenzx.island.action.security.converter;
 
-import org.chenzx.island.action.security.pojo.AuthRoleDto;
 import org.chenzx.island.action.security.pojo.SysUser;
 import org.chenzx.island.action.security.pojo.SysUserDo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingConstants;
+import org.springframework.security.core.GrantedAuthority;
+
+import java.util.List;
 
 /**
  * @author 陈泽宣
@@ -21,8 +23,8 @@ public interface SysUserConverter {
     /**
      * 将SysUserDo转换为SysUser对象
      *
-     * @param sysUserDo do对象
-     * @param user      转换的目标对象
+     * @param sysUserDo   do对象
+     * @param authorities 用户权限集合
      * @return SysUser对象
      */
     @Mapping(target = "id", source = "sysUserDo.id")
@@ -34,9 +36,7 @@ public interface SysUserConverter {
     @Mapping(target = "isAccountNonLocked", source = "sysUserDo.isAccountNonLocked")
     @Mapping(target = "isCredentialsNonExpired", source = "sysUserDo.isCredentialsNonExpired")
     @Mapping(target = "isEnabled", source = "sysUserDo.isEnabled")
-    @Mapping(
-            target = "authorities",
-            expression = "java(org.springframework.security.core.authority.AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(\",\",java.util.stream.Stream.of(user.getAuths(),user.getRoles()).flatMap(java.util.Collection::stream).collect(java.util.stream.Collectors.toList()))))")
-    SysUser doToSysUser(SysUserDo sysUserDo, AuthRoleDto user);
+    @Mapping(target = "authorities", source = "authorities")
+    SysUser doToSysUser(SysUserDo sysUserDo, List<GrantedAuthority> authorities);
 
 }

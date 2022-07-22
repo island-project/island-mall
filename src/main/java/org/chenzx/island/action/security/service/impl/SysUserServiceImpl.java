@@ -3,17 +3,23 @@ package org.chenzx.island.action.security.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Sets;
 import lombok.RequiredArgsConstructor;
 import org.chenzx.island.action.security.converter.SysUserConverter;
 import org.chenzx.island.action.security.mapper.SysUserMapper;
+import org.chenzx.island.action.security.pojo.AuthRoleDto;
 import org.chenzx.island.action.security.pojo.SysUser;
 import org.chenzx.island.action.security.pojo.SysUserDo;
 import org.chenzx.island.action.security.service.ISysUserService;
 import org.chenzx.island.common.enums.SystemEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * @author 陈泽宣
@@ -44,7 +50,14 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUserDo> im
         if (sysUserDo == null) {
             return null;
         }
-        return sysUserConverter.doToSysUser(sysUserDo, sysUserMapper.queryUserAllInfo(sysUserDo.getId()));
+        List<AuthRoleDto> authRoleList = sysUserMapper.queryUserAllInfo(sysUserDo.getId());
+        Set<String> authSet = Sets.newHashSet();
+        for (AuthRoleDto dto : authRoleList) {
+            authSet.add(dto.getRoles());
+            authSet.addAll(dto.getAuths());
+        }
+        return sysUserConverter.doToSysUser(sysUserDo,
+                AuthorityUtils.commaSeparatedStringToAuthorityList(String.join(",", authSet)));
     }
 
     @Override

@@ -1,7 +1,7 @@
 package org.chenzx.island.action.security.handler;
 
 import com.alibaba.fastjson.JSONObject;
-import org.chenzx.island.common.vo.Result;
+import org.chenzx.island.common.pojo.Result;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -12,7 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.chenzx.island.common.enums.SysResponseCodeEnum.SECURITY_UNAUTHORIZED_ACCESS;
+import static org.chenzx.island.action.security.enums.SecurityEnum.SECURITY_UNAUTHORIZED_ACCESS;
+
 
 /**
  * @author 陈泽宣
