@@ -5,6 +5,7 @@ import org.chenzx.island.action.security.enums.SecurityEnum;
 import org.chenzx.island.action.security.exception.RefreshTokenExpiredException;
 import org.chenzx.island.common.exception.BusinessException;
 import org.chenzx.island.common.pojo.Result;
+import org.springframework.validation.BindException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -51,6 +52,17 @@ public class RestExceptionHandler {
     }
 
     /**
+     * 请求参数异常处理器
+     *
+     * @param e 异常对象
+     * @return 封装后的返回前端的异常信息
+     */
+    @ExceptionHandler({BindException.class})
+    public Result bindExceptionHandler(BindException e) {
+        return Result.error(REQUEST_PARAMETER_EXCEPTION.getCode(), e.getBindingResult().getAllErrors().get(0).getDefaultMessage());
+    }
+
+    /**
      * 刷新令牌过期异常处理器
      *
      * @param e 异常对象
@@ -62,15 +74,26 @@ public class RestExceptionHandler {
     }
 
     /**
+     * 业务相关异常处理器
+     *
+     * @param e 异常对象
+     * @return 封装后的返回前端的异常信息
+     */
+    @ExceptionHandler({IllegalArgumentException.class, BusinessException.class})
+    public Result businessExceptionHandler(Exception e) {
+        return Result.error(ERROR.getCode(), e.getMessage());
+    }
+
+    /**
      * 通用异常处理器,处理断言失败的异常和其他未被定义的异常
      *
      * @param e 异常对象
      * @return 封装后的返回前端的异常信息
      */
-    @ExceptionHandler({IllegalArgumentException.class, Exception.class, BusinessException.class})
+    @ExceptionHandler({Exception.class})
     public Result currencyExceptionHandle(Exception e) {
         log.error(e.getMessage());
-        return Result.error(ERROR.getCode(), e.getLocalizedMessage());
+        return Result.error(ERROR.getCode(), ERROR.getMsg());
     }
 
 }

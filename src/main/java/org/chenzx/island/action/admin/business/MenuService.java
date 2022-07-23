@@ -37,6 +37,7 @@ public class MenuService {
         List<MenuVo> result = Lists.newArrayList();
         // 查询出全部的菜单
         List<SysAdminFunctionMenuDo> allMenus = sysAdminFunctionMenuService.queryAllEnableMenu();
+        // TODO 此处需要添加权限过滤逻辑
         // 按照菜单级别分组
         Map<Integer, List<SysAdminFunctionMenuDo>> levelMap = allMenus.stream().collect(Collectors.groupingBy(SysAdminFunctionMenuDo::getLevel));
         List<MenuVo> rootMenu = levelMap.get(0).stream().map(v -> {

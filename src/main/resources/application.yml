@@ -3,6 +3,8 @@ spring:
     name: island-mall
   profiles:
     active: dev
+  jackson:
+    default-property-inclusion: NON_EMPTY
 server:
   port: 8080
   servlet:
