@@ -14,6 +14,7 @@ import org.chenzx.island.common.pojo.DictionaryVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.util.List;
 import java.util.Map;
@@ -56,6 +57,7 @@ public class SysDictionaryImpl extends ServiceImpl<SysDictionaryMapper, SysDicti
                 .filter(v -> v.getParentId().equals(id))
                 .map(v -> DictionaryVo.builder()
                         .id(v.getId()).label(v.getLabel()).value(v.getValue()).build()).collect(Collectors.toList());
+        Assert.isTrue(result.size() > 1, "未查询到该字典");
         structureResultList(result, map, 1);
         return result;
     }
