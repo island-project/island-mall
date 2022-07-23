@@ -1,6 +1,7 @@
 package org.chenzx.island.action.security.handler;
 
 import com.alibaba.fastjson.JSONObject;
+import org.chenzx.island.action.security.exception.InvalidTokenException;
 import org.chenzx.island.action.security.exception.TokenExpiredException;
 import org.chenzx.island.common.pojo.Result;
 import org.springframework.security.core.AuthenticationException;
@@ -13,8 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static org.chenzx.island.action.security.enums.SecurityEnum.SECURITY_LOGIN_REQUIRED;
-import static org.chenzx.island.action.security.enums.SecurityEnum.SECURITY_TOKEN_EXPIRED;
+import static org.chenzx.island.action.security.enums.SecurityEnum.*;
 
 /**
  * @author 陈泽宣
@@ -31,6 +31,9 @@ public class LoginAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (authException instanceof TokenExpiredException) {
             // token 过期
             result = Result.error(SECURITY_TOKEN_EXPIRED.getCode(), SECURITY_TOKEN_EXPIRED.getMsg());
+        } else if (authException instanceof InvalidTokenException) {
+            // token 无效
+            result = Result.error(SECURITY_INVALID_TOKEN.getCode(), SECURITY_INVALID_TOKEN.getMsg());
         } else {
             result = Result.error(SECURITY_LOGIN_REQUIRED.getCode(), SECURITY_LOGIN_REQUIRED.getMsg());
         }
